@@ -7,13 +7,14 @@ import {
   deleteProduct,
   getActiveProducts,
   getProductsByRange,
+  deleteProducts,
 } from "../controllers/productController.js";
 import advancedResults from "../middleware/advancedResults.js";
 import Product from "../models/Product.js";
 
 const router = express.Router();
 
-router.route("/").get(getProducts).post(createProduct);
+router.route("/").get(getProducts).post(createProduct).delete(deleteProducts);
 router.route("/byRange").get(getProductsByRange);
 router.route("/active").get(getActiveProducts);
 

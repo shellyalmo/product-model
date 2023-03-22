@@ -41,7 +41,39 @@ export const getProduct = asyncHandler(async (req, res, next) => {
 //@desc Update a product
 //@route PUT /api/v1/products/:id
 //@access Private
+// export const updateProduct = asyncHandler(async (req, res, next) => {
+//   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   });
+
+//   if (!product) {
+//     return next(new Error(`Product with id: ${req.params.id} not found`));
+//   }
+//   res.status(200).json({
+//     success: true,
+//     data: product,
+//   });
+// });
+
 export const updateProduct = asyncHandler(async (req, res, next) => {
+  const allowedUpdates = [
+    "name",
+    "category",
+    "isActive",
+    "details",
+    "images",
+    "phone",
+  ]; // List of allowed updates
+  const updates = Object.keys(req.body); // Get keys of the updates sent in the request
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  ); // Check if all updates are allowed
+
+  if (!isValidOperation) {
+    return next(new Error("Invalid updates!"));
+  }
+
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -71,6 +103,17 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: {},
+  });
+});
+
+// @desc    Delete all product
+// @route   DELETE /api/v1/products
+// @access  Private
+export const deleteProducts = asyncHandler(async (req, res, next) => {
+  const product = await Product.deleteMany({});
+  res.status(200).json({
+    success: true,
+    data: product,
   });
 });
 
