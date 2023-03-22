@@ -73,3 +73,28 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
     data: {},
   });
 });
+
+//@desc Get active Products
+//@route GET /api/v1/Products
+//@access Public
+export const getActiveProducts = asyncHandler(async (req, res, next) => {
+  const product = await Product.find({ isActive: true });
+  res.status(200).json({
+    success: true,
+    data: product,
+  });
+});
+
+//@desc Get products by price range
+//@route GET /api/v1/Products
+//@access Public
+export const getProductsByRange = asyncHandler(async (req, res, next) => {
+  const { query } = req;
+  const product = await Product.find({
+    "details.price": { $gt: query.min, $lt: query.max },
+  });
+  res.status(200).json({
+    success: true,
+    data: product,
+  });
+});
